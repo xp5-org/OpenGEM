@@ -1,0 +1,17 @@
+PARENT = {
+    "name": "OpenGEM OpenWatcom",
+    "archtype": "i386",
+    "platform": "MSDOS i386",
+    "description": "OpenGEM fork (GIT_SRC_DIR) tested on DOSBox-X, QEMU i386 and 86Box.\n\nBuild pin A = the OpenGEM package every emulator testlist boots; tools below are placeholders for test orchestration.",
+    "build_tracker": True,
+    "ab_testing": True,
+    "build_slots": ["A", "B"],
+    "ab_follow_latest": True,
+    "tool_registry": True,
+    "batch_run_tools": False,
+    "batch_run_all": True,
+    "batch_run_failed": True,
+    "host_arch_gating": True,
+    "status_by_platform": True,
+    "view": "table",
+}

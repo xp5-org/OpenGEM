@@ -1,0 +1,8 @@
+system dos
+option quiet
+option stack=0x4000
+name DESKTOP.EXE
+file desktop,desk1,deskact,deskfun,deskwin,deskpro,deskppd,deskobj,deskfpd,deskins
+file deskapp1,deskapp2,deskapp3,deskgraf,deskrsrc,deskosif,deskinf,deskdir,deskgsx
+file main,desktype,desksupp,deskcds,optimize,int3
+library LIBSRC\PPDGEM-L.LIB
