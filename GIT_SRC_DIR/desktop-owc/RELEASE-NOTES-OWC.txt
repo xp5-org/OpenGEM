@@ -1,0 +1,45 @@
+FreeGEM Desktop 3.2.3 -> OpenWatcom port, release notes
+Version 3.2.3-owc01a, 2026-11-21
+Base: "FreeGEM Desktop 3.2.3.zip" (OpenGEM 7 RC3 SDK) + LIBSRC/GEMINC from
+the Pacific C bindings kit. Build: BUILDOWC.BAT (wcc/wasm/wlib/wlink, large model).
+
+Layout
+ desktop-owc/        desktop source (ported)
+ desktop-owc/LIBSRC  GEM bindings library source (ported), builds PPDGEM-L.LIB
+ desktop-owc/GEMINC  bindings headers (ported), shared by desktop and LIBSRC
+ desktop-owc/pacc-orig  Pacific-only files kept for reference, not built
+
+Added
+ BUILDOWC.BAT ONEL.BAT ONED.BAT LINK.LNK  OpenWatcom build, no Pacific make
+ PPDLDRAW.ASM    wasm port of PPDLDRAW.AS (draw-callback stub for the library)
+ DESKOSIF.ASM    wasm port of DESKOSIF.AS (INT 10h/16h/21h hooks); data via CS:
+ pacc-orig/      DESKOSIF.AS, ICN2XML.C, XML2ICN.C, PPDHOOK.C (moved, unchanged
+                 except ^Z removed)
+
+Changed
+ *.C *.H         removed DOS ^Z end-of-file bytes (Watcom rejects them)
+ GEMINC/MACHINE.H  "typedef FAR TYPE *P" -> "typedef TYPE FAR *P" (Watcom order)
+ *.C *.H         strlcpy/strlcat -> dsk_strlcpy/dsk_strlcat (clash with Watcom string.h)
+ INT3.C          Pacific #asm -> Watcom _asm / #pragma aux
+ MAIN.C          cut at Pacific #asm block (unused freemem())
+ LIBSRC/PPDVDI.C   "register far void *" -> "void far *"
+ LIBSRC/PPDD0.H, PPDD002.C  dos_lpvoid VOID -> WORD
+ LIBSRC/PPDD000,002,003,007,019,028.C  explicit return of AX value (Pacific
+                 returned AX implicitly, Watcom does not)
+ LIBSRC/PPDD013.C, PPDD026.C  #include <dos.h> (FP_CONSTRUCT -> MK_FP)
+ DESKTOP.RSC     About-box version "3.2.3-pacc10a, August 2005" ->
+                 "3.2.3-owc01a, Nov 2026" (same length, padded)
+
+Removed from build
+ PPDHOOK.C       INT 0xEF desk-accessory hook (Pacific #asm), unused by desktop
+ ICN2XML.C XML2ICN.C  host tools with own main(), not part of DESKTOP.EXE
+
+Build options (set in BUILDOWC.BAT via WCC env var, DOS 126-char line limit)
+ -bt=dos -ml -zq -dLARGE_MODEL -d__PACIFIC__ -dfar=__far -dnear=__near
+ -dFP_CONSTRUCT=MK_FP (library only)
+ Small model overflows the 64k code segment; large model links (81540 bytes).
+
+Known / untested
+ DESKOSIF.ASM CS:-relative data access differs from the original (DS-relative).
+ Boots to desktop in DOSBox-X (testlist3); full feature check not done.
+ Pacific .PRJ/MAKEFILE/SMALL/LARGE files left as shipped, unused.

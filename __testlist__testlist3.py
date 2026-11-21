@@ -30,7 +30,7 @@ CONFIG = {
             "title": "stage OpenGEM with the new desktop",
             "description": "C: is a host dir: copy the RC3 tree, swap in the OpenWatcom DESKTOP.EXE as DESKTOP.APP.",
             "param": {
-                "command": "set -e; test -s '{new_desktop}'; grep -q owc_01a '{new_rsc}'; rm -rf '{gem_run}'; mkdir -p '{gem_run}'; cp -r '{gem_src}/.' '{gem_run}/'; cd '{gem_run}/GEMAPPS/GEMSYS'; mv DESKTOP.APP DESKTOP.ORG; cp '{new_desktop}' DESKTOP.APP; cp '{new_rsc}' DESKTOP.RSC; ls -l DESKTOP.*",
+                "command": "set -e; test -s '{new_desktop}'; grep -q owc01a '{new_rsc}'; rm -rf '{gem_run}'; mkdir -p '{gem_run}'; cp -r '{gem_src}/.' '{gem_run}/'; cd '{gem_run}/GEMAPPS/GEMSYS'; mv DESKTOP.APP DESKTOP.ORG; cp '{new_desktop}' DESKTOP.APP; cp '{new_rsc}' DESKTOP.RSC; ls -l DESKTOP.*",
                 "timeout": 60
             },
             "subaction": ""

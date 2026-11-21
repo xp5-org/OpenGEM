@@ -1,7 +1,6 @@
 """testlist2: build the GEM bindings library (LIBSRC -> PPDGEM-L.LIB) and the FreeGEM
-Desktop 3.2.3 with OpenWatcom 16-bit large model under DOSBox-X, then link
-DESKTOP.EXE. Pacific-isms are patched in a throwaway copy by prereqs/port_*.sh;
-the two Pacific assembler files are ported to wasm (prereqs/*.asm).
+Desktop 3.2.3 with OpenWatcom 16-bit large model under DOSBox-X, then link DESKTOP.EXE.
+Source is the ported tree GIT_SRC_DIR/desktop-owc (see RELEASE-NOTES-OWC.txt there).
 """
 import sys
 import os
@@ -22,17 +21,16 @@ CONFIG = {
     "hdd1_overlay": "c_drive.qcow2",
     "machine": "svga_s3",
     "memsize": 16,
-    "desk_zip": "{projbasedir}{projdir}/GIT_SRC_DIR/source/OpenGEM-7-RC3-SDK/sdk/desktop/FreeGEM Desktop 3.2.3.zip",
-    "gem_kit": "{projbasedir}{projdir}/GIT_SRC_DIR/source/OpenGEM-7-RC3-SDK/sdk/bindings/pacific-c",
+    "owc_src": "{projbasedir}{projdir}/GIT_SRC_DIR/desktop-owc",
     "desk_run": "{projbasedir}{projdir}/test_objoutput/desk_run",
     "structure": {"project": {"_rel": "{projdir}", "out_dir": {"_rel": "test_objoutput"}}},
     "steps": [
         {
             "action": "test_hostbuild",
-            "title": "extract desktop source",
-            "description": "D: is a host dir: unpack the zip fresh, add the build batch files.",
+            "title": "stage ported desktop source",
+            "description": "D: is a host dir: copy the ported tree (GIT_SRC_DIR/desktop-owc) fresh.",
             "param": {
-                "command": "set -e; P='{projbasedir}{projdir}/prereqs'; K='{gem_kit}'; R='{desk_run}'; rm -rf \"$R\"; mkdir -p \"$R\"; unzip -qo '{desk_zip}' -d \"$R\"; mkdir -p \"$R/GEMINC\" \"$R/LIBSRC/GEMINC\"; cp \"$K/INCLUDE/\"*.H \"$R/GEMINC/\"; cp \"$K/INCLUDE/\"*.H \"$R/LIBSRC/GEMINC/\"; cp \"$K/LIBSRC/\"*.C \"$K/LIBSRC/\"*.H \"$R/LIBSRC/\"; cp $P/BUILD2.BAT $P/ONEL.BAT $P/ONED.BAT $P/LINK.LNK $P/ppdldraw.asm $P/deskosif.asm \"$R/\"; sh $P/port_desktop.sh \"$R\"; rm -f \"$R/ICN2XML.C\" \"$R/XML2ICN.C\" \"$R/DESKOSIF.AS\"; sh $P/port_lib.sh \"$R/LIBSRC\"; ls \"$R/LIBSRC\" | wc -l",
+                "command": "set -e; R='{desk_run}'; rm -rf \"$R\"; mkdir -p \"$R\"; cp -r '{owc_src}'/. \"$R\"/; ls \"$R/LIBSRC\" | wc -l",
                 "timeout": 60
             },
             "subaction": ""
@@ -76,7 +74,7 @@ CONFIG = {
             "subaction": ""
         },
         {"action": "test_sendcommand", "param": {"cmd_text": "d:", "delay": "1", "name": "dosbox1", "special_keys": "Return"}, "subaction": ""},
-        {"action": "test_sendcommand", "title": "run BUILD2.BAT", "param": {"cmd_text": "build2", "name": "dosbox1", "special_keys": "Return"}, "subaction": ""},
+        {"action": "test_sendcommand", "title": "run BUILDOWC.BAT", "param": {"cmd_text": "buildowc", "name": "dosbox1", "special_keys": "Return"}, "subaction": ""},
         {
             "action": "test_fileexists",
             "description": "BUILD2.BAT writes DONE.TXT last, whatever the compiler said.",
